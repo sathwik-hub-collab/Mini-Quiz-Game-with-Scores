@@ -1,0 +1,2657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+<title>MINI QUIZ GAME — Sakura Edition | Japanese Aesthetic Quiz Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Shippori+Mincho:wght@500;700;800&display=swap" rel="stylesheet"/>
+<style>
+/* ==========================================================================
+   SAKURA CLASSROOM QUIZ PLATFORM — DESIGN LANGUAGE & DESIGN SYSTEM
+   Inspired by Japanese Feudal Fantasy & Sakura Dusk Architecture (Kamui)
+   ========================================================================== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg-deep:#0f0917;
+  --bg-twilight:#180f24;
+  --bg-plum:#231433;
+  --bg-mist:#341b47;
+  
+  --sakura-white:#ffffff;
+  --sakura-pale:#fff0f3;
+  --sakura-soft:#ffccd5;
+  --sakura-light:#ffb3c1;
+  --sakura-pink:#ff758f;
+  --sakura-rose:#ff4d6d;
+  --sakura-dark:#c9184a;
+  --sakura-crimson:#800f2f;
+  
+  --gold-glow:#ffd166;
+  --gold-bright:#ffb703;
+  --gold-deep:#e09f3e;
+  
+  --jade-green:#06d6a0;
+  --ruby-red:#e63946;
+  --indigo-mystic:#7b2cbf;
+  --amethyst:#9d4edd;
+  
+  --glass-bg:rgba(26,15,38,0.78);
+  --glass-panel:rgba(35,20,50,0.85);
+  --glass-border:rgba(255,182,193,0.24);
+  --glass-border-hover:rgba(255,182,193,0.55);
+  --glass-glow:rgba(255,117,143,0.2);
+  
+  --font-serif:'Cinzel',serif;
+  --font-jp:'Shippori Mincho',serif;
+  --font-sans:'Plus Jakarta Sans',sans-serif;
+  
+  --ease-sakura:cubic-bezier(0.22,1,0.36,1);
+}
+
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-sans);
+  background-color:var(--bg-deep);
+  color:var(--sakura-pale);
+  min-height:100vh;
+  overflow-x:hidden;
+  position:relative;
+  background-image:
+    radial-gradient(circle at 50% 12%, rgba(255,117,143,0.18) 0%, transparent 60%),
+    radial-gradient(circle at 15% 85%, rgba(157,78,221,0.15) 0%, transparent 50%),
+    linear-gradient(180deg, #180f24 0%, #120a1d 40%, #0d0615 100%);
+  background-attachment:fixed;
+}
+
+/* Background Canvas & Atmospheric Scenery */
+#sakura-canvas{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  z-index:1;
+  pointer-events:none;
+}
+
+.scenery-layer{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  overflow:hidden;
+}
+
+.mountain-bg{
+  position:absolute;
+  bottom:0;
+  left:0;
+  width:100%;
+  height:360px;
+  background:linear-gradient(0deg, #09040d 0%, rgba(20,10,30,0.85) 60%, transparent 100%);
+}
+
+.scenery-svg{
+  position:absolute;
+  bottom:0;
+  left:0;
+  width:100%;
+  height:auto;
+  max-height:48vh;
+  opacity:0.85;
+}
+
+/* Watermark Kanji Background Art */
+.kanji-bg{
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  font-family:var(--font-jp);
+  font-size:clamp(160px, 32vw, 420px);
+  font-weight:900;
+  color:rgba(255,182,193,0.025);
+  user-select:none;
+  pointer-events:none;
+  z-index:0;
+  white-space:nowrap;
+  line-height:1;
+  letter-spacing:0.05em;
+}
+
+/* Header & Navigation Bar */
+.nav-header{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  height:68px;
+  background:rgba(18,10,28,0.75);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--glass-border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 28px;
+  z-index:100;
+}
+
+.nav-brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  text-decoration:none;
+  cursor:pointer;
+}
+
+.brand-emblem{
+  width:36px;
+  height:36px;
+  border-radius:10px;
+  background:linear-gradient(135deg, var(--sakura-rose), var(--sakura-dark));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 0 16px var(--glass-glow);
+  border:1px solid rgba(255,255,255,0.4);
+}
+
+.brand-emblem svg{
+  width:22px;
+  height:22px;
+  fill:#fff;
+}
+
+.brand-text-wrap{
+  display:flex;
+  flex-direction:column;
+}
+
+.brand-title{
+  font-family:var(--font-serif);
+  font-size:16px;
+  font-weight:900;
+  letter-spacing:0.18em;
+  color:#fff;
+  text-shadow:0 0 12px rgba(255,117,143,0.4);
+}
+
+.brand-sub{
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:0.25em;
+  color:var(--sakura-soft);
+  text-transform:uppercase;
+}
+
+.nav-actions{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.nav-badge{
+  font-family:var(--font-sans);
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:0.08em;
+  padding:5px 12px;
+  border-radius:30px;
+  background:rgba(255,182,193,0.1);
+  border:1px solid var(--glass-border);
+  color:var(--sakura-light);
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.nav-badge-dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--jade-green);
+  box-shadow:0 0 8px var(--jade-green);
+  animation:pulseDot 2s infinite;
+}
+
+@keyframes pulseDot{
+  0%,100%{transform:scale(1);opacity:1}
+  50%{transform:scale(1.3);opacity:0.5}
+}
+
+.icon-btn{
+  background:rgba(255,255,255,0.06);
+  border:1px solid var(--glass-border);
+  color:var(--sakura-soft);
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition:all 0.25s var(--ease-sakura);
+}
+
+.icon-btn:hover{
+  background:rgba(255,117,143,0.2);
+  border-color:var(--sakura-pink);
+  color:#fff;
+  transform:scale(1.06);
+}
+
+/* Main Application Shell */
+#app{
+  position:relative;
+  z-index:10;
+  min-height:100vh;
+  padding:92px 20px 60px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+
+.screen{
+  width:100%;
+  max-width:980px;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  gap:26px;
+  animation:fadeInUp 0.45s var(--ease-sakura);
+}
+
+.screen.active{
+  display:flex;
+}
+
+@keyframes fadeInUp{
+  from{opacity:0;transform:translateY(28px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* Glassmorphism Cards & Panels */
+.sakura-card{
+  width:100%;
+  background:var(--glass-bg);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  border:1px solid var(--glass-border);
+  border-radius:24px;
+  padding:34px 38px;
+  position:relative;
+  box-shadow:0 24px 60px rgba(5,2,10,0.55), 0 0 30px rgba(255,117,143,0.08), inset 0 1px 0 rgba(255,255,255,0.12);
+  overflow:hidden;
+}
+
+.sakura-card::before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:2.5px;
+  background:linear-gradient(90deg, transparent, var(--sakura-pink), var(--gold-bright), var(--sakura-pink), transparent);
+}
+
+/* Card Decorative Corner Accents (Japanese Jewel Inlays) */
+.corner-gem{
+  position:absolute;
+  width:10px;
+  height:10px;
+  border:1.5px solid var(--gold-bright);
+  transform:rotate(45deg);
+  background:rgba(255,183,3,0.3);
+  pointer-events:none;
+}
+.corner-gem.top-left{top:12px;left:12px}
+.corner-gem.top-right{top:12px;right:12px}
+.corner-gem.bottom-left{bottom:12px;left:12px}
+.corner-gem.bottom-right{bottom:12px;right:12px}
+
+/* Typography Classes */
+.hero-tag{
+  font-family:var(--font-jp);
+  font-size:13px;
+  letter-spacing:0.35em;
+  color:var(--sakura-soft);
+  text-transform:uppercase;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:6px;
+}
+
+.hero-tag::before, .hero-tag::after{
+  content:'❖';
+  color:var(--gold-bright);
+  font-size:10px;
+}
+
+.hero-title{
+  font-family:var(--font-serif);
+  font-size:clamp(34px, 5.5vw, 56px);
+  font-weight:900;
+  letter-spacing:0.06em;
+  text-align:center;
+  line-height:1.15;
+  background:linear-gradient(135deg, #ffffff 30%, var(--sakura-soft) 70%, var(--sakura-pink) 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  text-shadow:0 6px 20px rgba(255,117,143,0.3);
+}
+
+.hero-subtitle{
+  font-size:14px;
+  font-weight:500;
+  color:rgba(255,240,243,0.78);
+  letter-spacing:0.12em;
+  text-align:center;
+  max-width:560px;
+  line-height:1.6;
+}
+
+.section-title{
+  font-family:var(--font-serif);
+  font-size:clamp(24px, 3.8vw, 36px);
+  font-weight:800;
+  letter-spacing:0.06em;
+  color:#fff;
+  text-align:center;
+}
+
+.section-sub{
+  font-size:13px;
+  color:var(--sakura-soft);
+  text-align:center;
+  letter-spacing:0.1em;
+  margin-top:-14px;
+}
+
+/* Beautiful Japanese Gaming Buttons */
+.btn-sakura{
+  font-family:var(--font-serif);
+  font-size:14px;
+  font-weight:800;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  border:none;
+  border-radius:50px;
+  cursor:pointer;
+  padding:14px 34px;
+  transition:all 0.28s var(--ease-sakura);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  text-decoration:none;
+  position:relative;
+  overflow:hidden;
+  white-space:nowrap;
+}
+
+.btn-primary{
+  background:linear-gradient(135deg, var(--sakura-rose) 0%, var(--sakura-dark) 100%);
+  color:#fff;
+  box-shadow:0 8px 24px rgba(201,24,74,0.45), inset 0 1px 0 rgba(255,255,255,0.3);
+  border:1px solid rgba(255,255,255,0.35);
+}
+
+.btn-primary:hover{
+  transform:translateY(-3px);
+  box-shadow:0 14px 34px rgba(201,24,74,0.6), 0 0 25px rgba(255,117,143,0.4);
+  background:linear-gradient(135deg, var(--sakura-pink) 0%, var(--sakura-rose) 100%);
+}
+
+.btn-primary:active{
+  transform:translateY(1px);
+}
+
+.btn-gold{
+  background:linear-gradient(135deg, var(--gold-bright) 0%, var(--gold-deep) 100%);
+  color:#180f24;
+  font-weight:900;
+  box-shadow:0 8px 24px rgba(255,183,3,0.35), inset 0 1px 0 rgba(255,255,255,0.4);
+  border:1px solid rgba(255,255,255,0.4);
+}
+
+.btn-gold:hover{
+  transform:translateY(-3px);
+  box-shadow:0 14px 34px rgba(255,183,3,0.55), 0 0 25px rgba(255,209,102,0.4);
+}
+
+.btn-secondary{
+  background:rgba(255,255,255,0.08);
+  color:var(--sakura-pale);
+  border:1.5px solid var(--glass-border);
+  backdrop-filter:blur(8px);
+}
+
+.btn-secondary:hover{
+  background:rgba(255,255,255,0.16);
+  border-color:var(--sakura-pink);
+  color:#fff;
+  transform:translateY(-2px);
+  box-shadow:0 8px 20px rgba(0,0,0,0.3);
+}
+
+.btn-ghost{
+  background:transparent;
+  color:var(--sakura-soft);
+  border:1px solid transparent;
+}
+
+.btn-ghost:hover{
+  color:#fff;
+  border-color:var(--glass-border);
+  background:rgba(255,255,255,0.05);
+}
+
+.btn-row{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  flex-wrap:wrap;
+}
+
+/* Mode Switcher Tabs */
+.mode-tabs{
+  display:flex;
+  background:rgba(18,10,28,0.7);
+  padding:5px;
+  border-radius:40px;
+  border:1px solid var(--glass-border);
+  margin-bottom:12px;
+}
+
+.mode-tab{
+  font-family:var(--font-serif);
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  padding:10px 24px;
+  border-radius:30px;
+  border:none;
+  cursor:pointer;
+  background:transparent;
+  color:var(--sakura-soft);
+  transition:all 0.25s var(--ease-sakura);
+}
+
+.mode-tab.active{
+  background:linear-gradient(135deg, var(--sakura-rose), var(--sakura-dark));
+  color:#fff;
+  box-shadow:0 4px 16px rgba(201,24,74,0.4);
+}
+
+/* Form Controls & Inputs */
+.input-group{
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.input-label{
+  font-family:var(--font-serif);
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  color:var(--sakura-soft);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.sakura-input{
+  width:100%;
+  background:rgba(18,10,28,0.65);
+  border:1.5px solid var(--glass-border);
+  border-radius:14px;
+  padding:14px 18px;
+  font-family:var(--font-sans);
+  font-size:15px;
+  font-weight:600;
+  color:#fff;
+  outline:none;
+  transition:all 0.25s var(--ease-sakura);
+}
+
+.sakura-input:focus{
+  border-color:var(--sakura-pink);
+  background:rgba(26,14,38,0.85);
+  box-shadow:0 0 0 4px rgba(255,117,143,0.18);
+}
+
+.sakura-input::placeholder{
+  color:rgba(255,204,213,0.4);
+}
+
+/* 9 CATEGORIES GRID — PRESERVED FROM ORIGINAL PROJECT */
+.cat-grid{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:16px;
+  width:100%;
+}
+
+.cat-card{
+  background:rgba(28,16,40,0.7);
+  border:1.5px solid var(--glass-border);
+  border-radius:18px;
+  padding:22px 20px;
+  cursor:pointer;
+  transition:all 0.3s var(--ease-sakura);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  position:relative;
+  overflow:hidden;
+}
+
+.cat-card::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at 10% 10%, rgba(255,117,143,0.12), transparent 60%);
+  opacity:0;
+  transition:opacity 0.3s;
+}
+
+.cat-card:hover{
+  transform:translateY(-6px);
+  border-color:var(--sakura-pink);
+  background:rgba(36,20,52,0.9);
+  box-shadow:0 16px 40px rgba(0,0,0,0.4), 0 0 24px rgba(255,117,143,0.22);
+}
+
+.cat-card:hover::before{
+  opacity:1;
+}
+
+.cat-card.selected{
+  border-color:var(--gold-bright);
+  background:rgba(44,24,64,0.95);
+  box-shadow:0 0 0 2px var(--gold-bright), 0 12px 30px rgba(255,183,3,0.25);
+}
+
+.cat-card-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.cat-icon-badge{
+  width:44px;
+  height:44px;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+  border:1px solid rgba(255,255,255,0.15);
+  box-shadow:0 4px 12px rgba(0,0,0,0.3);
+}
+
+.cat-qbadge{
+  font-family:var(--font-serif);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:0.15em;
+  padding:4px 10px;
+  border-radius:20px;
+  background:rgba(255,182,193,0.12);
+  border:1px solid var(--glass-border);
+  color:var(--sakura-soft);
+}
+
+.cat-title{
+  font-family:var(--font-serif);
+  font-size:16px;
+  font-weight:800;
+  color:#fff;
+  letter-spacing:0.04em;
+}
+
+.cat-jp{
+  font-family:var(--font-jp);
+  font-size:11px;
+  color:var(--sakura-pink);
+  letter-spacing:0.15em;
+  margin-top:-6px;
+}
+
+.cat-desc{
+  font-size:12px;
+  color:rgba(255,240,243,0.65);
+  line-height:1.45;
+}
+
+/* LOBBY & WAITING ROOM STYLES */
+.lobby-grid{
+  display:grid;
+  grid-template-columns:1fr 1.3fr;
+  gap:26px;
+  width:100%;
+}
+
+.qr-box-wrap{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:16px;
+  background:rgba(18,10,28,0.7);
+  border:1.5px solid var(--glass-border);
+  border-radius:20px;
+  padding:26px 20px;
+  text-align:center;
+}
+
+.qr-frame{
+  background:#fff;
+  padding:16px;
+  border-radius:18px;
+  box-shadow:0 12px 36px rgba(0,0,0,0.5), 0 0 28px rgba(255,117,143,0.3);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+}
+
+#qrcode-canvas, #qrcode-svg{
+  display:block;
+  max-width:100%;
+}
+
+.room-code-tag{
+  font-family:var(--font-serif);
+  font-size:26px;
+  font-weight:900;
+  letter-spacing:0.15em;
+  color:var(--gold-bright);
+  text-shadow:0 0 16px rgba(255,183,3,0.4);
+  background:rgba(255,183,3,0.1);
+  padding:6px 18px;
+  border-radius:12px;
+  border:1px dashed var(--gold-bright);
+  cursor:pointer;
+  transition:transform 0.2s;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+}
+
+.room-code-tag:hover{
+  transform:scale(1.04);
+}
+
+.roster-wrap{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+.roster-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding-bottom:10px;
+  border-bottom:1px solid var(--glass-border);
+}
+
+.capacity-pill{
+  font-family:var(--font-serif);
+  font-size:12px;
+  font-weight:800;
+  padding:5px 14px;
+  border-radius:20px;
+  background:rgba(6,214,160,0.15);
+  border:1px solid rgba(6,214,160,0.4);
+  color:var(--jade-green);
+}
+
+.roster-list{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(130px, 1fr));
+  gap:10px;
+  max-height:300px;
+  overflow-y:auto;
+  padding-right:6px;
+}
+
+.roster-item{
+  background:rgba(255,255,255,0.06);
+  border:1px solid var(--glass-border);
+  border-radius:12px;
+  padding:10px 12px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  animation:popIn 0.3s var(--ease-sakura);
+}
+
+@keyframes popIn{
+  from{transform:scale(0.85);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+
+.roster-avatar{
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  background:linear-gradient(135deg, var(--sakura-pink), var(--sakura-dark));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:11px;
+  font-weight:800;
+  color:#fff;
+  flex-shrink:0;
+}
+
+.roster-name{
+  font-size:13px;
+  font-weight:700;
+  color:var(--sakura-pale);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* LIVE QUIZ ARENA (10 Questions / 180s Countdown) */
+.quiz-top-bar{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding-bottom:16px;
+  border-bottom:1px solid var(--glass-border);
+  gap:14px;
+  flex-wrap:wrap;
+}
+
+.quiz-arena-info{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.quiz-badge-cat{
+  font-family:var(--font-serif);
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:0.12em;
+  padding:6px 16px;
+  border-radius:30px;
+  background:rgba(255,117,143,0.18);
+  border:1px solid var(--sakura-pink);
+  color:var(--sakura-soft);
+}
+
+/* Global 180s Circular Timer */
+.global-timer-wrap{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.timer-ring-box{
+  position:relative;
+  width:64px;
+  height:64px;
+}
+
+.timer-ring-box svg{
+  transform:rotate(-90deg);
+}
+
+.timer-circle-bg{
+  fill:none;
+  stroke:rgba(255,182,193,0.14);
+  stroke-width:5.5;
+}
+
+.timer-circle-fg{
+  fill:none;
+  stroke:var(--sakura-pink);
+  stroke-width:5.5;
+  stroke-linecap:round;
+  stroke-dasharray:175.9;
+  stroke-dashoffset:0;
+  transition:stroke-dashoffset 1s linear, stroke 0.4s;
+}
+
+.timer-circle-fg.warn{
+  stroke:var(--gold-bright);
+}
+
+.timer-circle-fg.danger{
+  stroke:var(--ruby-red);
+  animation:ringPulse 1s infinite;
+}
+
+@keyframes ringPulse{
+  0%,100%{stroke-width:5.5;opacity:1}
+  50%{stroke-width:7.5;opacity:0.6}
+}
+
+.timer-digits{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  font-family:var(--font-serif);
+  font-size:16px;
+  font-weight:900;
+  color:#fff;
+  line-height:1;
+}
+
+.timer-label{
+  font-size:8px;
+  font-weight:800;
+  letter-spacing:0.15em;
+  color:var(--sakura-soft);
+  text-transform:uppercase;
+  margin-top:2px;
+}
+
+/* Jump Navigation Bar (10 Questions) */
+.jump-nav{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  width:100%;
+  flex-wrap:wrap;
+  margin:12px 0 6px;
+}
+
+.jump-node{
+  width:38px;
+  height:38px;
+  border-radius:10px;
+  background:rgba(255,255,255,0.06);
+  border:1.5px solid var(--glass-border);
+  color:var(--sakura-soft);
+  font-family:var(--font-serif);
+  font-size:12px;
+  font-weight:800;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition:all 0.22s var(--ease-sakura);
+  position:relative;
+}
+
+.jump-node:hover{
+  border-color:var(--sakura-pink);
+  background:rgba(255,117,143,0.18);
+  color:#fff;
+  transform:translateY(-2px);
+}
+
+.jump-node.current{
+  border-color:var(--gold-bright);
+  background:linear-gradient(135deg, rgba(255,183,3,0.25), rgba(255,183,3,0.1));
+  color:#fff;
+  box-shadow:0 0 14px rgba(255,183,3,0.3);
+  transform:scale(1.08);
+}
+
+.jump-node.answered{
+  border-color:var(--jade-green);
+  background:rgba(6,214,160,0.15);
+  color:var(--jade-green);
+}
+
+.jump-node-marks{
+  font-size:8px;
+  font-weight:700;
+  color:var(--gold-glow);
+  margin-top:-2px;
+}
+
+/* Question Presentation */
+.q-meta-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  width:100%;
+  margin-top:8px;
+}
+
+.q-difficulty-badge{
+  font-family:var(--font-serif);
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+  padding:4px 14px;
+  border-radius:20px;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+
+.diff-easy{background:rgba(6,214,160,0.15);color:var(--jade-green);border:1px solid rgba(6,214,160,0.35)}
+.diff-medium{background:rgba(255,183,3,0.15);color:var(--gold-bright);border:1px solid rgba(255,183,3,0.35)}
+.diff-hard{background:rgba(255,117,143,0.18);color:var(--sakura-pink);border:1px solid rgba(255,117,143,0.35)}
+.diff-expert{background:rgba(157,78,221,0.2);color:var(--amethyst);border:1px solid rgba(157,78,221,0.45)}
+
+.q-marks-badge{
+  font-family:var(--font-serif);
+  font-size:13px;
+  font-weight:900;
+  color:var(--gold-bright);
+  text-shadow:0 0 10px rgba(255,183,3,0.3);
+}
+
+.q-text{
+  font-family:var(--font-serif);
+  font-size:clamp(18px, 2.8vw, 24px);
+  font-weight:700;
+  line-height:1.55;
+  color:#fff;
+  text-shadow:0 2px 10px rgba(0,0,0,0.5);
+  margin:14px 0 20px;
+}
+
+/* 4 Options Grid */
+.options-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+  width:100%;
+}
+
+.option-btn{
+  background:rgba(22,12,32,0.8);
+  border:1.5px solid var(--glass-border);
+  border-radius:18px;
+  padding:16px 20px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  cursor:pointer;
+  transition:all 0.22s var(--ease-sakura);
+  text-align:left;
+  font-family:var(--font-sans);
+  font-size:15px;
+  font-weight:600;
+  color:var(--sakura-pale);
+  position:relative;
+  box-shadow:0 4px 14px rgba(0,0,0,0.2);
+}
+
+.option-btn:hover{
+  border-color:var(--sakura-pink);
+  background:rgba(36,18,52,0.9);
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(0,0,0,0.3), 0 0 16px rgba(255,117,143,0.2);
+}
+
+.option-btn.selected{
+  border-color:var(--gold-bright);
+  background:linear-gradient(135deg, rgba(255,183,3,0.22), rgba(36,18,52,0.9));
+  box-shadow:0 0 0 2px var(--gold-bright), 0 8px 25px rgba(255,183,3,0.3);
+  color:#fff;
+}
+
+.option-label{
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  background:rgba(255,182,193,0.12);
+  border:1px solid var(--glass-border);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:var(--font-serif);
+  font-size:13px;
+  font-weight:900;
+  color:var(--sakura-soft);
+  flex-shrink:0;
+  transition:all 0.22s;
+}
+
+.option-btn:hover .option-label{
+  background:var(--sakura-rose);
+  color:#fff;
+  border-color:transparent;
+}
+
+.option-btn.selected .option-label{
+  background:var(--gold-bright);
+  color:#180f24;
+  border-color:transparent;
+}
+
+.option-text{
+  flex:1;
+  line-height:1.4;
+}
+
+/* Quiz Controls Bottom Bar */
+.quiz-nav-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  width:100%;
+  margin-top:16px;
+  padding-top:16px;
+  border-top:1px solid var(--glass-border);
+}
+
+/* SAKURA LEADERBOARD & PODIUM */
+.podium-wrap{
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  gap:16px;
+  width:100%;
+  margin:20px 0 10px;
+  padding:0 10px;
+}
+
+.podium-slot{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  flex:1;
+  max-width:180px;
+  transition:transform 0.3s;
+}
+
+.podium-slot:hover{
+  transform:translateY(-6px);
+}
+
+.podium-crown{
+  font-size:24px;
+  margin-bottom:6px;
+  animation:bob 2s infinite ease-in-out;
+}
+
+@keyframes bob{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-6px)}
+}
+
+.podium-avatar{
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:var(--font-serif);
+  font-size:20px;
+  font-weight:900;
+  color:#fff;
+  border:3px solid #fff;
+  box-shadow:0 8px 24px rgba(0,0,0,0.5);
+  margin-bottom:8px;
+}
+
+.podium-name{
+  font-size:14px;
+  font-weight:800;
+  color:#fff;
+  margin-bottom:2px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width:100%;
+}
+
+.podium-score{
+  font-family:var(--font-serif);
+  font-size:16px;
+  font-weight:900;
+  margin-bottom:8px;
+}
+
+.podium-block{
+  width:100%;
+  border-radius:18px 18px 0 0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  font-family:var(--font-serif);
+  font-size:26px;
+  font-weight:900;
+  color:#fff;
+  position:relative;
+  box-shadow:0 10px 30px rgba(0,0,0,0.4);
+}
+
+.podium-slot.rank-1 .podium-block{
+  height:130px;
+  background:linear-gradient(180deg, var(--gold-bright) 0%, var(--gold-deep) 100%);
+  color:#180f24;
+}
+.podium-slot.rank-1 .podium-avatar{
+  border-color:var(--gold-bright);
+  background:linear-gradient(135deg, var(--gold-bright), var(--gold-deep));
+  color:#180f24;
+}
+.podium-slot.rank-1 .podium-score{
+  color:var(--gold-bright);
+}
+
+.podium-slot.rank-2 .podium-block{
+  height:95px;
+  background:linear-gradient(180deg, #e0e1dd 0%, #778da9 100%);
+  color:#0d1b2a;
+}
+.podium-slot.rank-2 .podium-avatar{
+  border-color:#e0e1dd;
+  background:linear-gradient(135deg, #e0e1dd, #778da9);
+  color:#0d1b2a;
+}
+.podium-slot.rank-2 .podium-score{
+  color:#e0e1dd;
+}
+
+.podium-slot.rank-3 .podium-block{
+  height:75px;
+  background:linear-gradient(180deg, #d4a373 0%, #a98467 100%);
+  color:#43281c;
+}
+.podium-slot.rank-3 .podium-avatar{
+  border-color:#d4a373;
+  background:linear-gradient(135deg, #d4a373, #a98467);
+  color:#43281c;
+}
+.podium-slot.rank-3 .podium-score{
+  color:#d4a373;
+}
+
+/* Leaderboard Table (70 Players) */
+.lb-table-wrap{
+  width:100%;
+  overflow-x:auto;
+  margin-top:14px;
+}
+
+.lb-table{
+  width:100%;
+  border-collapse:collapse;
+  text-align:left;
+}
+
+.lb-table th{
+  font-family:var(--font-serif);
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--sakura-soft);
+  padding:12px 14px;
+  border-bottom:1.5px solid var(--glass-border);
+}
+
+.lb-table td{
+  padding:14px;
+  font-size:14px;
+  font-weight:600;
+  border-bottom:1px solid rgba(255,182,193,0.1);
+  vertical-align:middle;
+}
+
+.lb-table tr:hover td{
+  background:rgba(255,255,255,0.04);
+}
+
+.rank-badge{
+  font-family:var(--font-serif);
+  font-size:14px;
+  font-weight:900;
+  width:32px;
+  height:32px;
+  border-radius:8px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.rank-gold{background:rgba(255,183,3,0.2);color:var(--gold-bright);border:1px solid var(--gold-bright)}
+.rank-silver{background:rgba(224,225,221,0.2);color:#e0e1dd;border:1px solid #e0e1dd}
+.rank-bronze{background:rgba(212,163,115,0.2);color:#d4a373;border:1px solid #d4a373}
+
+/* RESULTS SCREEN STATS CARDS */
+.stats-cards-grid{
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  gap:12px;
+  width:100%;
+}
+
+.stat-box{
+  background:rgba(20,10,30,0.7);
+  border:1px solid var(--glass-border);
+  border-radius:16px;
+  padding:18px 14px;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+
+.stat-num{
+  font-family:var(--font-serif);
+  font-size:26px;
+  font-weight:900;
+  line-height:1;
+}
+
+.stat-title{
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--sakura-soft);
+}
+
+/* Review Answers Collapsible List */
+.review-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  width:100%;
+  margin-top:14px;
+}
+
+.review-item{
+  background:rgba(18,10,28,0.7);
+  border:1px solid var(--glass-border);
+  border-radius:14px;
+  padding:16px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.review-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.review-status{
+  font-family:var(--font-serif);
+  font-size:11px;
+  font-weight:800;
+  padding:3px 10px;
+  border-radius:20px;
+}
+
+.review-status.ok{background:rgba(6,214,160,0.15);color:var(--jade-green)}
+.review-status.bad{background:rgba(230,57,70,0.15);color:var(--ruby-red)}
+
+.review-q{
+  font-size:14px;
+  font-weight:700;
+  color:#fff;
+}
+
+.review-insight{
+  font-size:12px;
+  color:var(--sakura-soft);
+  background:rgba(255,117,143,0.08);
+  border-left:3px solid var(--sakura-pink);
+  padding:8px 12px;
+  border-radius:4px;
+  line-height:1.5;
+}
+
+/* Modal Popup Dialog */
+.modal-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(8,3,14,0.85);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+  padding:20px;
+}
+
+.modal-overlay.active{
+  display:flex;
+}
+
+.modal-box{
+  background:var(--bg-twilight);
+  border:1.5px solid var(--glass-border);
+  border-radius:22px;
+  padding:30px;
+  max-width:440px;
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  gap:18px;
+  box-shadow:0 24px 60px rgba(0,0,0,0.7), 0 0 30px rgba(255,117,143,0.25);
+  animation:popIn 0.25s var(--ease-sakura);
+}
+
+/* Floating Confetti / Sakura Petals on Victory */
+.cf-petal{
+  position:fixed;
+  pointer-events:none;
+  z-index:9999;
+  animation:cfFloat linear forwards;
+}
+
+@keyframes cfFloat{
+  0%{transform:translateY(-40px) rotate(0deg);opacity:1}
+  100%{transform:translateY(105vh) rotate(720deg);opacity:0}
+}
+
+/* Responsive Breakpoints */
+@media(max-width:880px){
+  .cat-grid{grid-template-columns:repeat(2, 1fr)}
+  .lobby-grid{grid-template-columns:1fr}
+  .options-grid{grid-template-columns:1fr}
+  .stats-cards-grid{grid-template-columns:repeat(2, 1fr)}
+}
+
+@media(max-width:540px){
+  .cat-grid{grid-template-columns:1fr}
+  .nav-header{padding:0 16px}
+  .sakura-card{padding:22px 18px;border-radius:18px}
+  .podium-wrap{flex-direction:column;align-items:center}
+  .podium-slot{width:100%;max-width:none}
+  .podium-block{height:60px !important}
+}
+
+/* QR Toolbar & Action Buttons */
+.qr-toolbar{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  justify-content:center;
+  width:100%;
+  margin-top:4px;
+}
+.btn-qr-action{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:7px 12px;
+  font-size:11px;
+  font-weight:700;
+  border-radius:10px;
+  background:rgba(255,255,255,0.08);
+  border:1px solid var(--glass-border);
+  color:var(--sakura-soft);
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.btn-qr-action:hover{
+  background:rgba(255,117,143,0.18);
+  border-color:var(--sakura-pink);
+  color:#fff;
+  transform:translateY(-1px);
+}
+.btn-qr-action.active{
+  background:rgba(255,117,143,0.25);
+  border-color:var(--sakura-pink);
+  color:#fff;
+}
+
+/* Network Config Panel */
+.network-config-panel{
+  display:none;
+  flex-direction:column;
+  gap:10px;
+  width:100%;
+  padding:14px;
+  border-radius:14px;
+  background:rgba(18,10,28,0.92);
+  border:1px solid var(--sakura-pink);
+  text-align:left;
+  animation:popIn 0.2s var(--ease-sakura);
+}
+.network-chip-group{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+.network-chip{
+  padding:5px 10px;
+  font-size:10px;
+  font-weight:700;
+  border-radius:6px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid var(--glass-border);
+  color:var(--sakura-soft);
+  cursor:pointer;
+  transition:all 0.15s;
+}
+.network-chip:hover, .network-chip.active{
+  background:rgba(6,214,160,0.18);
+  border-color:var(--jade-green);
+  color:#fff;
+}
+
+/* Room Verify Banner */
+.room-verify-banner{
+  display:none;
+  width:100%;
+  padding:12px 14px;
+  border-radius:12px;
+  margin-bottom:8px;
+  border:1px solid var(--glass-border);
+  text-align:left;
+  animation:popIn 0.2s var(--ease-sakura);
+}
+.room-verify-banner.success{
+  background:rgba(6,214,160,0.12);
+  border-color:rgba(6,214,160,0.4);
+}
+.room-verify-banner.error{
+  background:rgba(230,57,70,0.14);
+  border-color:rgba(230,57,70,0.45);
+}
+.room-verify-banner.warn{
+  background:rgba(255,183,3,0.12);
+  border-color:rgba(255,183,3,0.4);
+}
+
+/* QR Scan Guide Box */
+.qr-scan-guide{
+  background:rgba(255,182,193,0.06);
+  border:1px dashed var(--sakura-pink);
+  border-radius:14px;
+  padding:20px 16px;
+  text-align:center;
+  animation:popIn 0.25s var(--ease-sakura);
+}
+</style>
+</head>
+<body>
+
+<!-- Animated Sakura & Firefly Canvas Background -->
+<canvas id="sakura-canvas"></canvas>
+
+<!-- Japanese Shrine & Mountain Background Layer -->
+<div class="scenery-layer">
+  <div class="mountain-bg"></div>
+  <svg class="scenery-svg" viewBox="0 0 1440 380" preserveAspectRatio="none" fill="none">
+    <!-- Mountain Ridges / Mount Fuji Silhouette -->
+    <path d="M0,380 L0,220 Q220,160 480,240 Q720,80 960,250 Q1200,180 1440,240 L1440,380 Z" fill="rgba(18,9,28,0.75)"/>
+    <path d="M0,380 L0,260 Q340,200 680,290 Q1020,190 1440,280 L1440,380 Z" fill="rgba(12,6,18,0.92)"/>
+    <!-- Shrine Pagoda Silhouette on Left -->
+    <g transform="translate(90, 160)" fill="rgba(24,12,38,0.95)" stroke="rgba(255,182,193,0.12)" stroke-width="1.5">
+      <polygon points="60,0 45,20 75,20"/>
+      <rect x="52" y="20" width="16" height="18"/>
+      <polygon points="60,30 20,50 100,50"/>
+      <rect x="42" y="50" width="36" height="25"/>
+      <polygon points="60,65 0,90 120,90"/>
+      <rect x="30" y="90" width="60" height="40"/>
+    </g>
+    <!-- Torii Gate Silhouette on Right -->
+    <g transform="translate(1220, 195)" fill="rgba(128,15,47,0.7)" stroke="rgba(255,117,143,0.3)" stroke-width="2">
+      <rect x="10" y="0" width="100" height="10" rx="3"/>
+      <rect x="20" y="16" width="80" height="8" rx="2"/>
+      <rect x="28" y="24" width="10" height="85"/>
+      <rect x="82" y="24" width="10" height="85"/>
+    </g>
+    <!-- Calming Water Horizon -->
+    <line x1="0" y1="340" x2="1440" y2="340" stroke="rgba(255,182,193,0.15)" stroke-width="1.5"/>
+  </svg>
+</div>
+
+<!-- Japanese Kanji Watermark Artwork -->
+<div class="kanji-bg" id="kanjiBg">桜花</div>
+
+<!-- Global Navigation Bar -->
+<header class="nav-header">
+  <div class="nav-brand" onclick="goHome()">
+    <div class="brand-emblem">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+    </div>
+    <div class="brand-text-wrap">
+      <span class="brand-title">SAKURA QUIZ</span>
+      <span class="brand-sub">Sakura Edition</span>
+    </div>
+  </div>
+
+  <div class="nav-actions">
+    <div class="nav-badge" id="netStatusBadge">
+      <span class="nav-badge-dot" id="netDot"></span>
+      <span id="netStatusText">9 Topics Active</span>
+    </div>
+    <button class="icon-btn" id="audioToggleBtn" title="Toggle Japanese Ambience Audio" onclick="toggleAudio()">
+      <span id="audioIcon">🔊</span>
+    </button>
+  </div>
+</header>
+
+<!-- Main Interactive Container -->
+<main id="app">
+
+  <!-- =========================================================================
+       SCREEN 0: WELCOME & SCHOLAR REGISTRATION
+       ========================================================================= -->
+  <section class="screen active" id="screen-welcome">
+    <div class="hero-tag">Sakura Edition • 9 Knowledge Domains</div>
+    <h1 class="hero-title">MINI QUIZ GAME<br/><span style="font-size:0.7em;color:var(--sakura-pink)">SAKURA EDITION</span></h1>
+    <p class="hero-subtitle">Embark on a scholarly trial inspired by Japanese Sakura aesthetics. Choose your domain, answer 10 questions in 180 seconds, earn up to 20 marks, and claim your place in the Hall of Champions.</p>
+
+    <div class="sakura-card" style="max-width:520px;display:flex;flex-direction:column;align-items:center;gap:20px;">
+      <div class="corner-gem top-left"></div>
+      <div class="corner-gem top-right"></div>
+      <div class="corner-gem bottom-left"></div>
+      <div class="corner-gem bottom-right"></div>
+
+      <div style="width:100%;display:flex;flex-direction:column;gap:18px;">
+        <div class="input-group">
+          <label class="input-label">Scholar / Player Name</label>
+          <input type="text" id="input-player-name" class="sakura-input" placeholder="Enter your name (e.g. Pavan)" maxlength="24" autocomplete="off"/>
+        </div>
+
+        <button class="btn-sakura btn-primary" onclick="goToCategories()" style="width:100%;margin-top:6px;font-size:15px;padding:14px;">
+          <span>🌸 CHOOSE TOPIC &amp; PLAY →</span>
+        </button>
+
+        <div class="btn-row" style="margin-top:4px;">
+          <button class="btn-sakura btn-ghost" onclick="viewGlobalLeaderboard()">🏆 Hall of Champions</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       SCREEN 1: TOPIC / CATEGORY SELECTION (ALL 9 PRESERVED CATEGORIES)
+       ========================================================================= -->
+  <section class="screen" id="screen-categories">
+    <div class="hero-tag">Step 1 of 2: Knowledge Domain</div>
+    <h2 class="section-title">CHOOSE QUIZ TOPIC</h2>
+    <p class="section-sub">Select one of the 9 official knowledge categories to begin your 180-second trial</p>
+
+    <div class="cat-grid" id="catGridContainer">
+      <!-- Generated dynamically in JavaScript for all 9 categories -->
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-sakura btn-secondary" onclick="goHome()">← Back</button>
+      <button class="btn-sakura btn-primary" id="btnConfirmCategory" onclick="startSelectedQuiz()">
+        <span>🌸 BEGIN QUIZ →</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       SCREEN 3: LIVE QUIZ ARENA (10 QUESTIONS / 180s COUNTDOWN TIMER)
+       ========================================================================= -->
+  <section class="screen" id="screen-quiz">
+    <div class="sakura-card">
+      <div class="corner-gem top-left"></div>
+      <div class="corner-gem top-right"></div>
+      <div class="corner-gem bottom-left"></div>
+      <div class="corner-gem bottom-right"></div>
+
+      <!-- Quiz Arena Top Bar -->
+      <div class="quiz-top-bar">
+        <div class="quiz-arena-info">
+          <span class="quiz-badge-cat" id="quizCatBadge">Science</span>
+          <span style="font-family:var(--font-serif);font-size:13px;font-weight:800;color:var(--sakura-soft)" id="qIndexText">Question 01 of 10</span>
+        </div>
+
+        <!-- 180 Seconds Single Global Countdown Timer -->
+        <div class="global-timer-wrap">
+          <div class="timer-ring-box">
+            <svg width="64" height="64" viewBox="0 0 64 64">
+              <circle class="timer-circle-bg" cx="32" cy="32" r="28"/>
+              <circle class="timer-circle-fg" id="timerRing" cx="32" cy="32" r="28"/>
+            </svg>
+            <div class="timer-digits">
+              <span id="timerSeconds">180</span>
+              <span class="timer-label">SEC</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Jump Navigation Bar (10 Questions with Answered & Marks Indicators) -->
+      <div class="jump-nav" id="jumpNav">
+        <!-- 10 Nodes Q1 .. Q10 populated in JS -->
+      </div>
+
+      <!-- Question Metadata -->
+      <div class="q-meta-row">
+        <span class="q-difficulty-badge diff-easy" id="qDifficultyBadge">Easy • 1 Mark</span>
+        <span class="q-marks-badge" id="qMarksBadge">+1 Mark</span>
+      </div>
+
+      <!-- Question Text -->
+      <div class="q-text" id="qQuestionText">
+        Loading challenge question...
+      </div>
+
+      <!-- 4 Multiple Choice Options (A, B, C, D) -->
+      <div class="options-grid" id="optionsGrid">
+        <!-- Option buttons generated in JS -->
+      </div>
+
+      <!-- Navigation & Action Row -->
+      <div class="quiz-nav-row">
+        <button class="btn-sakura btn-secondary" id="btnPrevQ" onclick="navPrevQ()">
+          ← Previous
+        </button>
+        <div style="font-size:12px;color:var(--sakura-soft);font-weight:700" id="answeredCountText">
+          0 of 10 Answered
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="btn-sakura btn-secondary" id="btnNextQ" onclick="navNextQ()">
+            Next →
+          </button>
+          <button class="btn-sakura btn-primary" id="btnSubmitQuiz" onclick="confirmSubmitQuiz()">
+            ✓ Submit Quiz
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       SCREEN 4: INDIVIDUAL RESULTS SCREEN
+       ========================================================================= -->
+  <section class="screen" id="screen-results">
+    <div class="hero-tag">Tournament Concluded</div>
+    <h2 class="section-title" id="resultsTitle">TRIAL COMPLETE</h2>
+    <p class="section-sub" id="resultsSub">Your performance has been evaluated and recorded</p>
+
+    <div class="sakura-card" style="display:flex;flex-direction:column;align-items:center;gap:22px">
+      <div class="corner-gem top-left"></div>
+      <div class="corner-gem top-right"></div>
+      <div class="corner-gem bottom-left"></div>
+      <div class="corner-gem bottom-right"></div>
+
+      <!-- Grade & Score Badge -->
+      <div style="text-align:center">
+        <div style="font-family:var(--font-serif);font-size:48px;font-weight:900;color:var(--gold-bright);text-shadow:0 0 24px rgba(255,183,3,0.5)" id="resultMarksDisplay">
+          0 / 20
+        </div>
+        <div style="font-size:13px;font-weight:800;letter-spacing:0.2em;color:var(--sakura-soft);text-transform:uppercase" id="resultRankText">
+          Final Rank #1 of 1
+        </div>
+      </div>
+
+      <!-- Stats 4-Grid -->
+      <div class="stats-cards-grid">
+        <div class="stat-box">
+          <span class="stat-num" id="statCorrect" style="color:var(--jade-green)">0</span>
+          <span class="stat-title">Correct</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num" id="statIncorrect" style="color:var(--ruby-red)">0</span>
+          <span class="stat-title">Incorrect</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num" id="statTime" style="color:var(--gold-bright)">0s</span>
+          <span class="stat-title">Time Taken</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num" id="statPct" style="color:var(--sakura-pink)">0%</span>
+          <span class="stat-title">Accuracy</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="btn-row">
+        <button class="btn-sakura btn-gold" onclick="viewLeaderboard()">
+          🏆 View Live Leaderboard
+        </button>
+        <button class="btn-sakura btn-secondary" onclick="toggleReview()">
+          📖 Review Explanations
+        </button>
+        <button class="btn-sakura btn-ghost" onclick="goHome()">
+          🏠 Home
+        </button>
+      </div>
+
+      <!-- Review Section (Revealed after quiz!) -->
+      <div class="review-list" id="reviewSection" style="display:none">
+        <!-- Populated dynamically with all 10 questions and explanations -->
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       SCREEN 5: SAKURA LEADERBOARD & PODIUM (UP TO 70 PLAYERS)
+       ========================================================================= -->
+  <section class="screen" id="screen-leaderboard">
+    <div class="hero-tag">Hall of Champions</div>
+    <h2 class="section-title">SAKURA LEADERBOARD</h2>
+    <p class="section-sub">Ranked by: 1. Total Marks (Max 20) • 2. Completion Time Tie-Breaker</p>
+
+    <div class="sakura-card">
+      <div class="corner-gem top-left"></div>
+      <div class="corner-gem top-right"></div>
+      <div class="corner-gem bottom-left"></div>
+      <div class="corner-gem bottom-right"></div>
+
+      <!-- Top 3 Podium (Gold, Silver, Bronze) -->
+      <div class="podium-wrap" id="podiumWrap">
+        <!-- Rendered in JS -->
+      </div>
+
+      <!-- Full Ranking Table (Up to 70 Participants) -->
+      <div class="lb-table-wrap">
+        <table class="lb-table" id="leaderboardTable">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Scholar Name</th>
+              <th>Marks (/20)</th>
+              <th>Time</th>
+              <th>Domain</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboardTbody">
+            <!-- Populated in JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="btn-row" style="margin-top:20px">
+        <button class="btn-sakura btn-primary" onclick="exportCsv()">
+          📥 Export Results as CSV
+        </button>
+        <button class="btn-sakura btn-secondary" onclick="goHome()">
+          🌸 Return to Sanctuary
+        </button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Submit Confirmation Modal -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-box">
+    <div style="font-size:32px">🌸</div>
+    <h3 style="font-family:var(--font-serif);font-size:20px;font-weight:800;color:#fff">Submit Your Answers?</h3>
+    <p style="font-size:13px;color:var(--sakura-soft);line-height:1.5" id="confirmModalText">
+      You have answered 10 of 10 questions. Would you like to finalize your submission?
+    </p>
+    <div class="btn-row" style="width:100%">
+      <button class="btn-sakura btn-secondary" onclick="closeConfirmModal()">Keep Editing</button>
+      <button class="btn-sakura btn-primary" onclick="finalizeSubmission()">Confirm &amp; Submit</button>
+    </div>
+  </div>
+</div>
+<!-- =========================================================================
+     CORE CLIENT CONTROLLER & QUIZ GAME ENGINE
+     Sakura Edition - 9 Knowledge Categories • 180s Countdown • 20 Marks Scoring
+     ========================================================================= -->
+<script>
+/* 9 Official Categories with Japanese Aesthetic Mapping */
+const CATEGORIES = [
+  { id: "Science", name: "Science", jp: "科学 (Kagaku)", icon: "⚛️", desc: "Quantum tunneling, cosmic dark energy, thermodynamics & genetics", color: "#ff758f" },
+  { id: "Technology", name: "Technology", jp: "技術 (Gijutsu)", icon: "💻", desc: "Algorithms, distributed consensus, transformers & compiler optimizations", color: "#00b4d8" },
+  { id: "Mathematics", name: "Mathematics", jp: "数学 (Sugaku)", icon: "Σ", desc: "Riemann hypothesis, Euler constants, Ramanujan taxicabs & primes", color: "#c2185b" },
+  { id: "History", name: "History", jp: "歴史 (Rekishi)", icon: "🏛️", desc: "Byzantine fall, Westphalia sovereignty, Magna Carta & suffrage", color: "#e09f3e" },
+  { id: "Geography", name: "Geography", jp: "地理 (Chiri)", icon: "🌏", desc: "Baikal depths, time zone extremes, Sargasso current & Danube paths", color: "#9d4edd" },
+  { id: "Sports", name: "Sports", jp: "競技 (Kyogi)", icon: "🏆", desc: "Olympic stadions, Grand Slam grass, maximum snooker breaks & records", color: "#06d6a0" },
+  { id: "Literature", name: "Literature", jp: "文学 (Bungaku)", icon: "📜", desc: "Tale of Genji, Homer's Odyssey, Orwellian dystopia & Proustian memory", color: "#ffadc6" },
+  { id: "General Knowledge", name: "General Knowledge", jp: "常識 (Joshiki)", icon: "⛩️", desc: "Wabi-Sabi philosophy, Shinto torii, leap years & national symbols", color: "#7209b7" },
+  { id: "Logical Reasoning", name: "Logical Reasoning", jp: "論理 (Ronri)", icon: "🧩", desc: "Birthday paradox, Monty Hall probabilities, syllogisms & deductions", color: "#ffd166" }
+];
+
+/* 10 Authentic Questions per Category (1,1,1,1,1, 2,2, 3,4,5 = 20 Marks Total) */
+const LOCAL_QUESTIONS = {
+  "Science": [
+    { id:1, diff:"Easy", marks:1, q:"What is the chemical symbol for Gold in the periodic table?", o:["Ag","Au","Fe","Cu"], a:1, e:"Au comes from the Latin 'aurum', meaning shining dawn." },
+    { id:2, diff:"Easy", marks:1, q:"Which planet in our solar system is famously known as the Red Planet?", o:["Venus","Jupiter","Mars","Saturn"], a:2, e:"Mars appears red due to iron oxide rust on its surface." },
+    { id:3, diff:"Easy", marks:1, q:"What cell organelle is widely referred to as the 'powerhouse of the cell'?", o:["Nucleus","Ribosome","Mitochondria","Golgi apparatus"], a:2, e:"Mitochondria produce ATP through cellular respiration, powering cells." },
+    { id:4, diff:"Easy", marks:1, q:"Which subatomic particle possesses a negative electric charge?", o:["Proton","Neutron","Positron","Electron"], a:3, e:"Electrons carry a negative elementary charge of -1.602 x 10^-19 C." },
+    { id:5, diff:"Easy", marks:1, q:"What gas do green plants primarily absorb from the air during photosynthesis?", o:["Oxygen","Nitrogen","Carbon Dioxide","Hydrogen"], a:2, e:"Plants absorb CO2 and water to produce glucose and oxygen." },
+    { id:6, diff:"Medium", marks:2, q:"What physical phenomenon causes daylight sky to appear blue?", o:["Mie scattering","Rayleigh scattering","Refraction","Ozone absorption"], a:1, e:"Rayleigh scattering disperses shorter blue wavelengths significantly more than red." },
+    { id:7, diff:"Medium", marks:2, q:"Which chemical element possesses the highest melting point of all metals (3,422°C)?", o:["Titanium","Platinum","Tungsten","Osmium"], a:2, e:"Tungsten has an exceptional melting point of 3,422°C." },
+    { id:8, diff:"Hard", marks:3, q:"What is the approximate half-life of Carbon-14 used in archaeological radiocarbon dating?", o:["~570 years","~5,730 years","~57,300 years","~573,000 years"], a:1, e:"Carbon-14 decays with a half-life of ~5,730 years." },
+    { id:9, diff:"Hard", marks:4, q:"Which quantum mechanical phenomenon enables particles to penetrate through energy barriers without sufficient classical energy?", o:["Wave interference","Quantum superposition","Quantum tunneling","Photoelectric effect"], a:2, e:"Quantum tunneling permits electrons to cross finite barriers in flash memory and stars." },
+    { id:10, diff:"Expert", marks:5, q:"According to current cosmological consensus (Lambda-CDM), Dark Energy accounts for what percentage of the total energy density of the universe?", o:["~5%","~27%","~68%","~95%"], a:2, e:"Dark Energy accounts for ~68% of the universe, causing accelerated expansion." }
+  ],
+  "Technology": [
+    { id:1, diff:"Easy", marks:1, q:"What does 'CPU' stand for in computer hardware architecture?", o:["Central Processing Unit","Core Power Utility","Computer Program Unit","Central Peripheral Union"], a:0, e:"The CPU executes program instructions and directs computations." },
+    { id:2, diff:"Easy", marks:1, q:"Which programming language was created in 1995 for interactive web browsers?", o:["Python","Java","JavaScript","C++"], a:2, e:"Brendan Eich created JavaScript in 10 days at Netscape in 1995." },
+    { id:3, diff:"Easy", marks:1, q:"What foundational protocol underlies data transmission on the World Wide Web?", o:["FTP","HTTP","SMTP","SSH"], a:1, e:"HyperText Transfer Protocol is the foundation of data communication on the Web." },
+    { id:4, diff:"Easy", marks:1, q:"What decimal number is represented by 4-bit binary 1010?", o:["8","10","12","14"], a:1, e:"1x8 + 0x4 + 1x2 + 0x1 = 10." },
+    { id:5, diff:"Easy", marks:1, q:"In Git version control, which command creates and switches to a new branch in one step?", o:["git push -b","git branch -n","git checkout -b","git merge --new"], a:2, e:"git checkout -b creates and activates the new branch." },
+    { id:6, diff:"Medium", marks:2, q:"What is the guaranteed worst-case time complexity of Merge Sort?", o:["O(n)","O(n log n)","O(n^2)","O(log n)"], a:1, e:"Merge sort guarantees O(n log n) by consistently dividing and merging." },
+    { id:7, diff:"Medium", marks:2, q:"Which cryptographic principle guarantees blockchain immutability?", o:["Zero-knowledge proofs","Cryptographic Hash Chaining","Symmetric encryption","Diffie-Hellman"], a:1, e:"Each block stores the previous block's SHA-256 hash in a tamper-evident chain." },
+    { id:8, diff:"Hard", marks:3, q:"According to the CAP Theorem, which 3 properties cannot be simultaneously guaranteed in distributed systems?", o:["Concurrency, Atomicity, Performance","Consistency, Availability, Partition Tolerance","Correctness, Authentication, Privacy","Caching, Availability, Persistence"], a:1, e:"Under network partitions, a distributed system must trade off consistency or continuous availability." },
+    { id:9, diff:"Hard", marks:4, q:"What core mechanism in Transformer neural networks enables parallel token processing?", o:["Recurrent loops","Multi-Head Self-Attention","Convolutional pooling","Stochastic dropout"], a:1, e:"Self-attention computes pairwise relevance weights across all tokens concurrently." },
+    { id:10, diff:"Expert", marks:5, q:"What compiler optimization reuses stack frames when the final action is a recursive call?", o:["Loop unrolling","Tail Call Optimization (TCO)","Dead code elimination","Constant folding"], a:1, e:"TCO converts tail recursion into an O(1) jump, preventing stack overflow." }
+  ],
+  "Mathematics": [
+    { id:1, diff:"Easy", marks:1, q:"What is the mathematical constant Pi (π) rounded to two decimal places?", o:["3.12","3.14","3.16","3.18"], a:1, e:"Pi is the ratio of circumference to diameter (~3.14159...)." },
+    { id:2, diff:"Easy", marks:1, q:"What is the square root of 144?", o:["10","11","12","14"], a:2, e:"12 multiplied by 12 equals 144." },
+    { id:3, diff:"Easy", marks:1, q:"In Euclidean geometry, what is the sum of interior angles in any triangle?", o:["90°","180°","270°","360°"], a:1, e:"The three interior angles of any triangle on a Euclidean plane sum to 180°." },
+    { id:4, diff:"Easy", marks:1, q:"What is the only even prime number in mathematics?", o:["0","2","4","6"], a:1, e:"2 is the only even prime because all larger even numbers are divisible by 2." },
+    { id:5, diff:"Easy", marks:1, q:"Solve for x in the equation: 3x + 9 = 24", o:["3","4","5","6"], a:2, e:"3x = 15 => x = 5." },
+    { id:6, diff:"Medium", marks:2, q:"What is the total sum of interior angles of a regular 6-sided hexagon?", o:["540°","720°","900°","1080°"], a:1, e:"(6 - 2) x 180° = 4 x 180° = 720°." },
+    { id:7, diff:"Medium", marks:2, q:"If two fair six-sided dice are rolled, what is the probability of obtaining a sum of 7?", o:["1/12","1/6","5/36","7/36"], a:1, e:"There are 6 winning combinations out of 36 outcomes: (1,6),(2,5),(3,4),(4,3),(5,2),(6,1) = 6/36 = 1/6." },
+    { id:8, diff:"Hard", marks:3, q:"In the Fibonacci sequence (1, 1, 2, 3, 5, 8, 13, 21, 34, ...), what is the 10th term?", o:["45","55","89","144"], a:1, e:"The 10th Fibonacci number is 55." },
+    { id:9, diff:"Hard", marks:4, q:"What is the Hardy-Ramanujan number, the smallest number expressible as the sum of two cubes in two different ways?", o:["128","1024","1729","2048"], a:2, e:"1729 = 1^3 + 12^3 = 9^3 + 10^3, identified by Ramanujan to Hardy." },
+    { id:10, diff:"Expert", marks:5, q:"What does the Riemann Hypothesis state about non-trivial zeros of the Zeta function?", o:["They are all real integers","Their real part is precisely 1/2","They diverge to infinity","They match prime gaps"], a:1, e:"All non-trivial zeros are conjectured to lie on the critical line Re(s) = 1/2." }
+  ],
+  "History": [
+    { id:1, diff:"Easy", marks:1, q:"Who served as the first President of the United States?", o:["Thomas Jefferson","John Adams","George Washington","Alexander Hamilton"], a:2, e:"George Washington was unanimously elected first President in 1789." },
+    { id:2, diff:"Easy", marks:1, q:"In which year did the global conflict of World War II come to an end?", o:["1943","1944","1945","1948"], a:2, e:"World War II concluded in 1945 with the surrender of the Axis powers." },
+    { id:3, diff:"Easy", marks:1, q:"Which ancient civilization constructed the Great Pyramids of Giza?", o:["Ancient Greece","Ancient Egypt","Babylonia","Persian Empire"], a:1, e:"The Egyptian Fourth Dynasty pharaohs built the Giza pyramids ~4,500 years ago." },
+    { id:4, diff:"Easy", marks:1, q:"Who painted the famous Renaissance portrait known as the Mona Lisa?", o:["Michelangelo","Raphael","Leonardo da Vinci","Donatello"], a:2, e:"Leonardo da Vinci painted the Mona Lisa in Florence." },
+    { id:5, diff:"Easy", marks:1, q:"The ancient Roman Colosseum was primarily used for what public events?", o:["Theatrical plays","Gladiatorial games & spectacles","Senate elections","Ancient Olympics"], a:1, e:"The Colosseum hosted gladiatorial contests, animal hunts, and public spectacles." },
+    { id:6, diff:"Medium", marks:2, q:"The Magna Carta limiting royal power was granted in 1215 by which English king?", o:["Richard I","King John","Henry III","Edward I"], a:1, e:"King John was forced to grant the Magna Carta at Runnymede by his barons." },
+    { id:7, diff:"Medium", marks:2, q:"The fall of Constantinople in 1453 extinguished which thousand-year empire?", o:["Holy Roman Empire","Byzantine Empire","Sassanid Empire","Ottoman Empire"], a:1, e:"Constantinople fell to Mehmed II, ending the 1,100-year Byzantine Empire." },
+    { id:8, diff:"Hard", marks:3, q:"Which self-governing nation first granted adult women the right to vote in 1893?", o:["United States","United Kingdom","New Zealand","Finland"], a:2, e:"New Zealand granted adult women parliamentary voting rights in September 1893." },
+    { id:9, diff:"Hard", marks:4, q:"The Rosetta Stone, crucial in deciphering Egyptian hieroglyphs, contained decrees in how many scripts?", o:["Two","Three","Four","Five"], a:1, e:"Three scripts: Hieroglyphic, Demotic, and Ancient Greek." },
+    { id:10, diff:"Expert", marks:5, q:"The historic Peace of Westphalia (1648) brought an end to which European war?", o:["The Hundred Years' War","The Thirty Years' War","The War of Spanish Succession","The Seven Years' War"], a:1, e:"The 1648 treaties ended the Thirty Years' War and codified sovereign nation-state diplomacy." }
+  ],
+  "Geography": [
+    { id:1, diff:"Easy", marks:1, q:"What is the largest ocean on Earth by surface area?", o:["Atlantic Ocean","Indian Ocean","Arctic Ocean","Pacific Ocean"], a:3, e:"The Pacific Ocean covers over 165 million km2, exceeding all land area combined." },
+    { id:2, diff:"Easy", marks:1, q:"What is the capital city of Japan?", o:["Kyoto","Osaka","Tokyo","Yokohama"], a:2, e:"Tokyo is Japan's vibrant capital city and economic center." },
+    { id:3, diff:"Easy", marks:1, q:"Which river is recognized as the longest river in the world (~6,650 km)?", o:["Amazon River","Nile River","Yangtze River","Mississippi River"], a:1, e:"The Nile River in Africa flows northward into the Mediterranean Sea." },
+    { id:4, diff:"Easy", marks:1, q:"Which continent contains the vast Amazon Basin and tropical rainforest?", o:["Africa","Asia","South America","Oceania"], a:2, e:"South America holds the vast Amazon Basin across nine nations." },
+    { id:5, diff:"Easy", marks:1, q:"What is the highest mountain peak above sea level on Earth (8,848.86 m)?", o:["K2","Kangchenjunga","Mount Everest","Lhotse"], a:2, e:"Mount Everest in the Himalayas is Earth's highest peak above sea level." },
+    { id:6, diff:"Medium", marks:2, q:"Which international river touches or forms borders with the most sovereign countries (10)?", o:["The Rhine","The Danube","The Volga","The Congo"], a:1, e:"The Danube touches 10 European nations on its journey to the Black Sea." },
+    { id:7, diff:"Medium", marks:2, q:"Lake Baikal in Siberia contains approximately what share of global unfrozen surface freshwater?", o:["5%","10%","20%","35%"], a:2, e:"Lake Baikal holds ~20% of the world's liquid surface freshwater, deeper than any other lake." },
+    { id:8, diff:"Hard", marks:3, q:"Which African country possesses over 200 ancient Nubian pyramids, outnumbering Egypt?", o:["Sudan","Libya","Chad","Algeria"], a:0, e:"Sudan has over 200 pyramids built by the ancient Kingdom of Kush." },
+    { id:9, diff:"Hard", marks:4, q:"Which body of water in the North Atlantic is bounded entirely by ocean currents rather than land shores?", o:["Baltic Sea","Caspian Sea","Sargasso Sea","Ross Sea"], a:2, e:"The Sargasso Sea has no coastlines; it is bounded by four major clockwise ocean currents." },
+    { id:10, diff:"Expert", marks:5, q:"Counting all its overseas territories, which sovereign country spans the most distinct time zones (12)?", o:["Russia","United States","United Kingdom","France"], a:3, e:"France spans 12 official time zones across its global overseas regions and territories." }
+  ],
+  "Sports": [
+    { id:1, diff:"Easy", marks:1, q:"How many players are on the pitch for one team in a regulation football (soccer) match?", o:["9","10","11","12"], a:2, e:"A standard football match fields 11 players per team, including the goalkeeper." },
+    { id:2, diff:"Easy", marks:1, q:"In which sport do teams compete to hoist the historic Stanley Cup trophy?", o:["Baseball","Basketball","Ice Hockey","American Football"], a:2, e:"The Stanley Cup is the oldest professional trophy in North American ice hockey (NHL)." },
+    { id:3, diff:"Easy", marks:1, q:"How many points are awarded for scoring a touchdown in American football?", o:["3","4","6","7"], a:2, e:"A touchdown is worth 6 points, followed by a point-after conversion attempt." },
+    { id:4, diff:"Easy", marks:1, q:"A standard triathlon consists of which three consecutive endurance sports?", o:["Rowing, Cycling, Running","Swimming, Cycling, Running","Skiing, Shooting, Running","Paddling, Biking, Hiking"], a:1, e:"Triathletes complete continuous swimming, cycling, and distance running legs." },
+    { id:5, diff:"Easy", marks:1, q:"How many regulation holes are played in a standard full round of golf?", o:["9","14","18","21"], a:2, e:"A standard golf course and championship round consists of 18 holes." },
+    { id:6, diff:"Medium", marks:2, q:"Which country has won the men's FIFA World Cup tournament the most times (5)?", o:["Germany","Italy","Argentina","Brazil"], a:3, e:"Brazil won 5 FIFA World Cup championships (1958, 1962, 1970, 1994, 2002)." },
+    { id:7, diff:"Medium", marks:2, q:"Which tennis Grand Slam tournament is contested exclusively on natural grass courts?", o:["Australian Open","Roland Garros","Wimbledon","US Open"], a:2, e:"The Championships at Wimbledon is played on traditional perennial ryegrass in London." },
+    { id:8, diff:"Hard", marks:3, q:"In standard professional snooker, what is the maximum achievable break score without fouls?", o:["140","147","155","160"], a:1, e:"A maximum 147 break pots all 15 reds with 15 blacks (120) and all six colors (27)." },
+    { id:9, diff:"Hard", marks:4, q:"What ~192-meter sprint was the sole athletic event contested in the earliest ancient Olympic Games?", o:["Diaulos","Dolichos","The Stadion","Hoplitodromos"], a:2, e:"The Stadion foot race was the sole Olympic event from 776 BC to 724 BC." },
+    { id:10, diff:"Expert", marks:5, q:"Who won individual Olympic gold in both the 100m and 200m sprints across three consecutive Olympic Games?", o:["Carl Lewis","Usain Bolt","Michael Johnson","Jesse Owens"], a:1, e:"Usain Bolt completed the historic 'triple-double' at Beijing 2008, London 2012, and Rio 2016." }
+  ],
+  "Literature": [
+    { id:1, diff:"Easy", marks:1, q:"Who authored 'The Hobbit' and 'The Lord of the Rings' fantasy masterpieces?", o:["C.S. Lewis","J.R.R. Tolkien","George R.R. Martin","Sir Arthur Conan Doyle"], a:1, e:"J.R.R. Tolkien was an Oxford professor of Anglo-Saxon who created Middle-earth." },
+    { id:2, diff:"Easy", marks:1, q:"In Shakespeare's tragedy, Hamlet is the prince of which royal realm?", o:["Norway","Scotland","Denmark","England"], a:2, e:"Prince Hamlet is the tragic prince of Elsinore Castle in the Kingdom of Denmark." },
+    { id:3, diff:"Easy", marks:1, q:"Which Scottish physician and author created the detective Sherlock Holmes?", o:["Agatha Christie","Sir Arthur Conan Doyle","Edgar Allan Poe","H.G. Wells"], a:1, e:"Conan Doyle debuted Sherlock Holmes in the 1887 novel 'A Study in Scarlet'." },
+    { id:4, diff:"Easy", marks:1, q:"What is the title of George Orwell's 1949 dystopian masterpiece warning against Big Brother?", o:["Animal Farm","Brave New World","1984","Fahrenheit 451"], a:2, e:"1984 introduced concepts of Newspeak, the Thought Police, Room 101, and Big Brother." },
+    { id:5, diff:"Easy", marks:1, q:"Who wrote the 1818 gothic science-fiction masterpiece 'Frankenstein; or, The Modern Prometheus'?", o:["Jane Austen","Emily Brontë","Mary Shelley","Virginia Woolf"], a:2, e:"Mary Shelley conceived Frankenstein during the stormy 'year without a summer' in Switzerland." },
+    { id:6, diff:"Medium", marks:2, q:"In Homer's ancient epic 'The Odyssey', what is the name of Odysseus's faithful wife on Ithaca?", o:["Helen","Penelope","Clytemnestra","Andromache"], a:1, e:"Penelope patiently outwitted 108 suitors by weaving and unravelling Laertes's shroud." },
+    { id:7, diff:"Medium", marks:2, q:"Which Russian novel opens with: 'All happy families are alike; each unhappy family is unhappy in its own way'?", o:["War and Peace","Crime and Punishment","Anna Karenina","The Brothers Karamazov"], a:2, e:"Leo Tolstoy's Anna Karenina begins with this celebrated philosophical opening line." },
+    { id:8, diff:"Hard", marks:3, q:"Which French novelist authored the 7-volume epic 'In Search of Lost Time' (À la recherche du temps perdu)?", o:["Gustave Flaubert","Marcel Proust","Albert Camus","Émile Zola"], a:1, e:"Marcel Proust's masterpiece explores involuntary memory, famously triggered by a madeleine." },
+    { id:9, diff:"Hard", marks:4, q:"In Dante Alighieri's 14th-century 'Divine Comedy', which classical Roman poet guides Dante through Inferno and Purgatorio?", o:["Ovid","Horace","Virgil","Cicero"], a:2, e:"Virgil, author of the Aeneid, serves as Dante's guide through Hell and Purgatory." },
+    { id:10, diff:"Expert", marks:5, q:"Which 11th-century Japanese masterpiece by Murasaki Shikibu is widely regarded as the world's first psychological novel?", o:["The Pillow Book","The Tale of the Heike","The Tale of Genji (源氏物語)","Kokoro"], a:2, e:"The Tale of Genji was written in the Heian court and pioneered psychological character depth." }
+  ],
+  "General Knowledge": [
+    { id:1, diff:"Easy", marks:1, q:"What is the largest living mammal and animal species on planet Earth?", o:["African Elephant","Blue Whale","Colossal Squid","Giraffe"], a:1, e:"The Blue Whale can reach lengths over 30 meters and weigh up to 190 metric tons." },
+    { id:2, diff:"Easy", marks:1, q:"What currency is officially used across Japan?", o:["Yuan","Won","Yen","Baht"], a:2, e:"The Japanese Yen (¥ / JPY) is Japan's national currency." },
+    { id:3, diff:"Easy", marks:1, q:"How many total days are in a standard Gregorian leap year?", o:["364","365","366","367"], a:2, e:"A leap year contains 366 days, adding February 29th to maintain solar alignment." },
+    { id:4, diff:"Easy", marks:1, q:"Which secondary color is produced when blue and yellow pigments are mixed?", o:["Purple","Green","Orange","Brown"], a:1, e:"Subtractive pigment mixing of blue and yellow absorbs red, leaving green visible." },
+    { id:5, diff:"Easy", marks:1, q:"What is the traditional Japanese art of decorative paper folding called?", o:["Ikebana","Origami","Bonsai","Ukiyo-e"], a:1, e:"Origami transforms flat sheets of paper into intricate sculptures without scissors." },
+    { id:6, diff:"Medium", marks:2, q:"Which avian species is recognized as the national bird of Japan (Kiji)?", o:["Red-crowned Crane","Japanese Robin","Green Pheasant","Barn Swallow"], a:2, e:"The Green Pheasant (Phasianus versicolor / Kiji) is the official national bird of Japan." },
+    { id:7, diff:"Medium", marks:2, q:"What is the international telephone calling country code for Japan?", o:["+44","+49","+81","+82"], a:2, e:"+81 is Japan's designated international dialing prefix code." },
+    { id:8, diff:"Hard", marks:3, q:"In the international NATO phonetic spelling alphabet, what code word represents the letter 'M'?", o:["Mango","Mike","Madrid","Metro"], a:1, e:"The NATO phonetic alphabet uses 'Mike' for M and 'November' for N." },
+    { id:9, diff:"Hard", marks:4, q:"What is the traditional vermilion gate marking the sacred entrance to a Japanese Shinto shrine called?", o:["Torii (鳥居)","Shoji","Tatami","Pagoda"], a:0, e:"A Torii gate marks the boundary transition between the mundane world and sacred spirit grounds." },
+    { id:10, diff:"Expert", marks:5, q:"Which Japanese aesthetic philosophy finds profound beauty in imperfection, simplicity, and natural transience?", o:["Yugen","Mono no aware","Wabi-Sabi (侘寂)","Kintsugi"], a:2, e:"Wabi-Sabi appreciates the beauty of things modest, humble, weathered, and impermanent." }
+  ],
+  "Logical Reasoning": [
+    { id:1, diff:"Easy", marks:1, q:"What is the next number in the geometric progression: 2, 4, 8, 16, 32, ...?", o:["48","60","64","128"], a:2, e:"Each term is multiplied by 2: 32 x 2 = 64." },
+    { id:2, diff:"Easy", marks:1, q:"If all roses are flowers and some flowers fade quickly, which statement is logically sound?", o:["All roses fade quickly","No roses fade quickly","Some roses may fade quickly","All flowers are roses"], a:2, e:"It is logically possible that some roses belong to the set of quick-fading flowers." },
+    { id:3, diff:"Easy", marks:1, q:"If yesterday was Tuesday, what day of the week will it be 3 days after tomorrow?", o:["Sunday","Monday","Tuesday","Wednesday"], a:1, e:"Yesterday = Tuesday => Today = Wednesday => Tomorrow = Thursday => +3 days = Monday." },
+    { id:4, diff:"Easy", marks:1, q:"A baseball bat and ball cost $1.10 together. The bat costs $1.00 more than the ball. What does the ball cost?", o:["$0.10","$0.05","$0.01","$0.15"], a:1, e:"Ball = x; Bat = x + 1.00. 2x + 1.00 = 1.10 => 2x = 0.10 => x = $0.05 (5 cents)." },
+    { id:5, diff:"Easy", marks:1, q:"Complete the conceptual analogy: Ocean is to Water as Forest is to:", o:["Sand","Trees","Clouds","Rivers"], a:1, e:"Trees are the primary constituent living components that form a forest." },
+    { id:6, diff:"Medium", marks:2, q:"If 5 industrial machines take 5 minutes to make 5 widgets, how long do 100 identical machines take to make 100 widgets?", o:["1 minute","5 minutes","20 minutes","100 minutes"], a:1, e:"Each machine takes 5 minutes to produce 1 widget. 100 machines working in parallel produce 100 widgets in 5 minutes." },
+    { id:7, diff:"Medium", marks:2, q:"You enter a cold, dark cabin at night with only ONE match. There is a candle, an oil lamp, and a wood stove. What must you light first?", o:["The candle","The oil lamp","The match","The wood stove"], a:2, e:"You must first light the match before you can ignite any of the other sources!" },
+    { id:8, diff:"Hard", marks:3, q:"There are 3 boxes with labels 'Apples', 'Oranges', and 'Both'. Every box is labeled incorrectly. Which box should you draw ONE fruit from to correctly label all three?", o:["The Apples box","The Oranges box","The 'Both' (Apples & Oranges) box","Any box at random"], a:2, e:"Drawing from 'Both' guarantees the true single fruit type, enabling complete logical deduction of all three boxes." },
+    { id:9, diff:"Hard", marks:4, q:"In a room with 23 randomly chosen people, what is the approximate probability that at least two share the same birthday?", o:["~10%","~25%","~50.7%","~75%"], a:2, e:"By the Birthday Paradox, 23 people yield 253 pairwise comparisons, giving a 50.7% collision chance." },
+    { id:10, diff:"Expert", marks:5, q:"In the Monty Hall problem (3 doors, 1 prize), the host opens a goat door. What is your probability of winning if you choose to SWITCH?", o:["1/3 (33.3%)","1/2 (50.0%)","2/3 (66.7%)","3/4 (75.0%)"], a:2, e:"The initial door had a 1/3 chance of being correct; switching transfers the 2/3 probability of the other two doors." }
+  ]
+};
+
+/* Application State */
+let STATE = {
+  playerName: '',
+  category: 'Science',
+  questions: [],
+  currentQIndex: 0,
+  answers: {},              // qIndex -> optionIndex
+  totalMarks: 0,
+  maxMarks: 20,
+  quizDuration: 180,        // 180 seconds countdown timer
+  quizStartTime: null,
+  timerInterval: null,
+  elapsedSeconds: 0
+};
+
+/* Japanese Ambience Audio Synthesizer (Web Audio API) */
+let AUDIO = {
+  ctx: null,
+  muted: false,
+  init: function() {
+    if(!AUDIO.ctx) {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        AUDIO.ctx = new AudioCtx();
+      } catch(e) {}
+    }
+  },
+  playTone: function(freq, type, duration, gainVal=0.15) {
+    if(AUDIO.muted) return;
+    AUDIO.init();
+    if(!AUDIO.ctx) return;
+    try {
+      const osc = AUDIO.ctx.createOscillator();
+      const gain = AUDIO.ctx.createGain();
+      osc.type = type || 'sine';
+      osc.frequency.setValueAtTime(freq, AUDIO.ctx.currentTime);
+      gain.gain.setValueAtTime(gainVal, AUDIO.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, AUDIO.ctx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(AUDIO.ctx.destination);
+      osc.start();
+      osc.stop(AUDIO.ctx.currentTime + duration);
+    } catch(e) {}
+  },
+  kotoChime: function() {
+    [523.25, 659.25, 783.99, 1046.5].forEach((f, idx)=>{
+      setTimeout(()=>AUDIO.playTone(f, 'sine', 0.6, 0.12), idx * 80);
+    });
+  },
+  selectNote: function() {
+    AUDIO.playTone(880, 'triangle', 0.2, 0.1);
+  },
+  tick: function() {
+    AUDIO.playTone(440, 'sine', 0.05, 0.05);
+  },
+  victoryFanfare: function() {
+    const notes = [440, 554.37, 659.25, 880, 1108.7];
+    notes.forEach((f, i)=>setTimeout(()=>AUDIO.playTone(f, 'triangle', 0.8, 0.2), i * 120));
+  }
+};
+
+function toggleAudio() {
+  AUDIO.muted = !AUDIO.muted;
+  document.getElementById('audioIcon').textContent = AUDIO.muted ? '🔇' : '🔊';
+}
+
+/* Toast Notifications */
+function showToast(msg) {
+  let toast = document.getElementById('sakura-toast');
+  if(!toast) {
+    toast = document.createElement('div');
+    toast.id = 'sakura-toast';
+    toast.style.cssText = `
+      position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+      background:rgba(24,15,36,0.95);border:1px solid var(--sakura-pink);
+      color:#fff;padding:12px 24px;border-radius:24px;font-size:13px;
+      font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,0.6);z-index:99999;
+      pointer-events:none;transition:opacity 0.3s, transform 0.3s;
+    `;
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.style.opacity = '1';
+  clearTimeout(toast.timer);
+  toast.timer = setTimeout(() => {
+    toast.style.opacity = '0';
+  }, 2800);
+}
+
+/* Screen Navigation */
+function showScreen(screenId) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const target = document.getElementById(screenId);
+  if(target) target.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goHome() {
+  clearInterval(STATE.timerInterval);
+  showScreen('screen-welcome');
+}
+
+/* Welcome Screen -> Choose Categories */
+function goToCategories() {
+  const nameInput = document.getElementById('input-player-name');
+  const enteredName = nameInput ? nameInput.value.trim() : '';
+  STATE.playerName = enteredName || 'Scholar';
+  AUDIO.selectNote();
+  renderCategoryGrid();
+  showScreen('screen-categories');
+}
+
+/* Render 9 Knowledge Categories Grid */
+function renderCategoryGrid() {
+  const container = document.getElementById('catGridContainer');
+  if(!container) return;
+  container.innerHTML = '';
+  CATEGORIES.forEach((cat, idx) => {
+    const card = document.createElement('div');
+    const isSelected = (STATE.category ? cat.id === STATE.category : idx === 0);
+    card.className = 'cat-card' + (isSelected ? ' selected' : '');
+    card.id = 'cat-card-' + cat.id;
+    card.onclick = () => selectCategory(cat.id);
+    card.innerHTML = `
+      <div class="cat-card-top">
+        <div class="cat-icon-badge" style="background:${cat.color}22;color:${cat.color}">${cat.icon}</div>
+        <span class="cat-qbadge">10 Q'S • 20 MARKS</span>
+      </div>
+      <div class="cat-title">${cat.name}</div>
+      <div class="cat-jp">${cat.jp}</div>
+      <div class="cat-desc">${cat.desc}</div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function selectCategory(catId) {
+  STATE.category = catId;
+  document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('selected'));
+  const selected = document.getElementById('cat-card-' + catId);
+  if(selected) selected.classList.add('selected');
+  AUDIO.selectNote();
+}
+
+/* Start Quiz Session */
+function startSelectedQuiz() {
+  const category = STATE.category || 'Science';
+  const questions = LOCAL_QUESTIONS[category] || LOCAL_QUESTIONS["Science"];
+  startQuizSession(questions);
+}
+
+function startQuizSession(questions) {
+  clearInterval(STATE.timerInterval);
+  STATE.questions = questions;
+  STATE.currentQIndex = 0;
+  STATE.answers = {};
+  STATE.quizStartTime = Date.now();
+  STATE.elapsedSeconds = 0;
+
+  document.getElementById('quizCatBadge').textContent = STATE.category;
+
+  renderJumpNav();
+  renderQuestion(0);
+  startGlobalTimer();
+
+  showScreen('screen-quiz');
+  AUDIO.kotoChime();
+}
+
+/* 180s Global Countdown Timer */
+function startGlobalTimer() {
+  clearInterval(STATE.timerInterval);
+  const ring = document.getElementById('timerRing');
+  const digits = document.getElementById('timerSeconds');
+  const totalDuration = STATE.quizDuration; // 180 seconds
+  const circumference = 175.9; // 2 * pi * 28
+
+  function updateTimerUI(remaining) {
+    if(digits) digits.textContent = remaining;
+    if(ring) {
+      const progress = remaining / totalDuration;
+      const offset = circumference - (progress * circumference);
+      ring.style.strokeDashoffset = offset;
+
+      if(remaining <= 20) {
+        ring.className = 'timer-circle-fg danger';
+        AUDIO.tick();
+      } else if(remaining <= 60) {
+        ring.className = 'timer-circle-fg warn';
+      } else {
+        ring.className = 'timer-circle-fg';
+      }
+    }
+  }
+
+  updateTimerUI(totalDuration);
+
+  STATE.timerInterval = setInterval(() => {
+    const now = Date.now();
+    const elapsed = Math.floor((now - STATE.quizStartTime) / 1000);
+    STATE.elapsedSeconds = elapsed;
+    const remaining = Math.max(0, totalDuration - elapsed);
+
+    updateTimerUI(remaining);
+
+    if(remaining <= 0) {
+      clearInterval(STATE.timerInterval);
+      alert("Time is up! 180 seconds have elapsed. Submitting your quiz now...");
+      finalizeSubmission();
+    }
+  }, 1000);
+}
+
+/* Render Jump Navigation Bar (10 Nodes) */
+function renderJumpNav() {
+  const nav = document.getElementById('jumpNav');
+  if(!nav) return;
+  nav.innerHTML = '';
+  STATE.questions.forEach((q, idx) => {
+    const node = document.createElement('div');
+    node.className = 'jump-node' + (idx === 0 ? ' current' : '');
+    node.id = 'jump-node-' + idx;
+    node.onclick = () => renderQuestion(idx);
+    node.innerHTML = `
+      <span>Q${idx + 1}</span>
+      <span class="jump-node-marks">+${q.marks}m</span>
+    `;
+    nav.appendChild(node);
+  });
+}
+
+/* Render Question */
+function renderQuestion(index) {
+  if(index < 0 || index >= STATE.questions.length) return;
+  STATE.currentQIndex = index;
+  const q = STATE.questions[index];
+
+  // Update Jump Nodes
+  document.querySelectorAll('.jump-node').forEach((node, i) => {
+    node.classList.toggle('current', i === index);
+    node.classList.toggle('answered', STATE.answers[i] !== undefined);
+  });
+
+  // Question Header
+  document.getElementById('qIndexText').textContent = `Question ${String(index + 1).padStart(2, '0')} of 10`;
+
+  const diffBadge = document.getElementById('qDifficultyBadge');
+  diffBadge.textContent = `${q.diff} • ${q.marks} Mark${q.marks > 1 ? 's' : ''}`;
+  diffBadge.className = 'q-difficulty-badge diff-' + (q.diff.toLowerCase());
+
+  document.getElementById('qMarksBadge').textContent = `+${q.marks} Mark${q.marks > 1 ? 's' : ''}`;
+  document.getElementById('qQuestionText').textContent = q.q;
+
+  // 4 Options Grid
+  const grid = document.getElementById('optionsGrid');
+  grid.innerHTML = '';
+  const labels = ['A', 'B', 'C', 'D'];
+  const opts = q.o || [];
+
+  opts.forEach((optText, oi) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn' + (STATE.answers[index] === oi ? ' selected' : '');
+    btn.onclick = () => selectOption(index, oi);
+    btn.innerHTML = `
+      <div class="option-label">${labels[oi]}</div>
+      <div class="option-text">${optText}</div>
+    `;
+    grid.appendChild(btn);
+  });
+
+  // Navigation Buttons
+  document.getElementById('btnPrevQ').disabled = (index === 0);
+  document.getElementById('btnNextQ').style.display = (index === STATE.questions.length - 1) ? 'none' : 'inline-flex';
+
+  updateAnsweredCount();
+}
+
+function selectOption(qIndex, optionIndex) {
+  STATE.answers[qIndex] = optionIndex;
+  AUDIO.selectNote();
+  renderQuestion(qIndex);
+}
+
+function navPrevQ() {
+  if(STATE.currentQIndex > 0) renderQuestion(STATE.currentQIndex - 1);
+}
+
+function navNextQ() {
+  if(STATE.currentQIndex < STATE.questions.length - 1) renderQuestion(STATE.currentQIndex + 1);
+}
+
+function updateAnsweredCount() {
+  const answered = Object.keys(STATE.answers).length;
+  document.getElementById('answeredCountText').textContent = `${answered} of 10 Answered`;
+}
+
+function confirmSubmitQuiz() {
+  const answered = Object.keys(STATE.answers).length;
+  const unanswered = 10 - answered;
+  const text = unanswered > 0
+    ? `You have answered ${answered} of 10 questions (${unanswered} unanswered). Are you sure you wish to submit now?`
+    : `You have completed all 10 questions! Would you like to finalize and submit your answers?`;
+  document.getElementById('confirmModalText').textContent = text;
+  document.getElementById('confirmModal').classList.add('active');
+}
+
+function closeConfirmModal() {
+  document.getElementById('confirmModal').classList.remove('active');
+}
+
+/* Submission & 20-Mark Evaluation */
+function finalizeSubmission() {
+  closeConfirmModal();
+  clearInterval(STATE.timerInterval);
+
+  const completionTime = Math.min(STATE.quizDuration, Math.max(1, STATE.elapsedSeconds));
+  localEvaluateSubmission(completionTime);
+}
+
+function localEvaluateSubmission(completionTime) {
+  let marks = 0;
+  let correct = 0;
+  let incorrect = 0;
+  let unanswered = 0;
+  const review = [];
+
+  STATE.questions.forEach((q, idx) => {
+    const chosen = STATE.answers[idx];
+    const isCorrect = (chosen !== undefined && chosen === q.a);
+    if(chosen === undefined) {
+      unanswered++;
+    } else if(isCorrect) {
+      correct++;
+      marks += q.marks;
+    } else {
+      incorrect++;
+    }
+    review.push({
+      index: idx,
+      question: q.q,
+      correctIndex: q.a,
+      chosenIndex: chosen !== undefined ? chosen : -1,
+      marks: q.marks,
+      isCorrect,
+      explanation: q.e || ""
+    });
+  });
+
+  const res = {
+    playerName: STATE.playerName || 'Scholar',
+    category: STATE.category,
+    totalMarks: marks,
+    maxMarks: 20,
+    correctCount: correct,
+    incorrectCount: incorrect,
+    unansweredCount: unanswered,
+    completionTime,
+    percentage: Math.round((marks / 20) * 100),
+    review
+  };
+
+  saveScoreToLeaderboard(res);
+  displayResults(res);
+}
+
+function displayResults(res) {
+  document.getElementById('resultMarksDisplay').textContent = `${res.totalMarks} / 20`;
+  document.getElementById('statCorrect').textContent = res.correctCount;
+  document.getElementById('statIncorrect').textContent = res.incorrectCount;
+  document.getElementById('statTime').textContent = `${Math.round(res.completionTime)}s`;
+  document.getElementById('statPct').textContent = `${res.percentage}%`;
+
+  const rankEl = document.getElementById('resultRankText');
+  if(rankEl) {
+    const list = getStoredLeaderboard();
+    list.sort((a,b) => b.totalMarks !== a.totalMarks ? b.totalMarks - a.totalMarks : a.completionTime - b.completionTime);
+    const myRank = list.findIndex(p => p.name === res.playerName && p.totalMarks === res.totalMarks) + 1;
+    rankEl.textContent = `Champion Rank #${myRank > 0 ? myRank : 1} • Domain: ${res.category}`;
+  }
+
+  // Render Question Review with Detailed Insights
+  const container = document.getElementById('reviewSection');
+  container.innerHTML = '';
+  if(res.review) {
+    const optLetters = ['A', 'B', 'C', 'D'];
+    res.review.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'review-item';
+      div.innerHTML = `
+        <div class="review-header">
+          <span style="font-family:var(--font-serif);font-size:12px;color:var(--gold-bright)">Question ${item.index + 1} (${item.marks} mark${item.marks > 1 ? 's' : ''})</span>
+          <span class="review-status ${item.isCorrect ? 'ok' : 'bad'}">${item.isCorrect ? '✓ Correct' : '✕ Incorrect'}</span>
+        </div>
+        <div class="review-q">${item.question}</div>
+        <div style="font-size:12px;color:var(--sakura-soft)">
+          Correct Answer: <b>(${optLetters[item.correctIndex]})</b>
+        </div>
+        <div class="review-insight">💡 <b>Insight:</b> ${item.explanation}</div>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  showScreen('screen-results');
+  AUDIO.victoryFanfare();
+  triggerSakuraCelebration();
+}
+
+function toggleReview() {
+  const rev = document.getElementById('reviewSection');
+  rev.style.display = (rev.style.display === 'none') ? 'flex' : 'none';
+}
+
+/* Leaderboard Persistence & Podium (Stored in localStorage) */
+const LEADERBOARD_KEY = 'sakura_hall_of_champions';
+
+function getStoredLeaderboard() {
+  try {
+    const raw = localStorage.getItem(LEADERBOARD_KEY);
+    if(raw) return JSON.parse(raw);
+  } catch(e) {}
+  // Default Hall of Champions high scores
+  return [
+    { name: "Sakura Sensei", category: "Science", totalMarks: 20, completionTime: 72, date: new Date().toLocaleDateString() },
+    { name: "Kenji Master", category: "Mathematics", totalMarks: 19, completionTime: 95, date: new Date().toLocaleDateString() },
+    { name: "Aoi Scholar", category: "Technology", totalMarks: 18, completionTime: 84, date: new Date().toLocaleDateString() },
+    { name: "Daiki Ronin", category: "History", totalMarks: 17, completionTime: 110, date: new Date().toLocaleDateString() },
+    { name: "Yuki Blossom", category: "Literature", totalMarks: 16, completionTime: 125, date: new Date().toLocaleDateString() }
+  ];
+}
+
+function saveScoreToLeaderboard(res) {
+  try {
+    const list = getStoredLeaderboard();
+    list.push({
+      name: res.playerName,
+      category: res.category,
+      totalMarks: res.totalMarks,
+      completionTime: res.completionTime,
+      date: new Date().toLocaleDateString()
+    });
+    localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(list));
+  } catch(e) {}
+}
+
+function viewLeaderboard() {
+  renderLeaderboardUI();
+  showScreen('screen-leaderboard');
+}
+
+function viewGlobalLeaderboard() {
+  renderLeaderboardUI();
+  showScreen('screen-leaderboard');
+}
+
+function renderLeaderboardUI() {
+  const participants = getStoredLeaderboard();
+
+  // Sort by: 1. Total marks DESC, 2. Completion time ASC
+  participants.sort((a, b) => {
+    if(b.totalMarks !== a.totalMarks) {
+      return b.totalMarks - a.totalMarks;
+    }
+    return a.completionTime - b.completionTime;
+  });
+
+  // Assign ranks with tie-breaking
+  let currentRank = 1;
+  participants.forEach((p, idx) => {
+    if(idx > 0 && p.totalMarks === participants[idx - 1].totalMarks && Math.abs(p.completionTime - participants[idx - 1].completionTime) < 0.1) {
+      p.rank = participants[idx - 1].rank;
+    } else {
+      p.rank = currentRank;
+    }
+    currentRank++;
+  });
+
+  const podiumWrap = document.getElementById('podiumWrap');
+  const tbody = document.getElementById('leaderboardTbody');
+  if(podiumWrap) podiumWrap.innerHTML = '';
+  if(tbody) tbody.innerHTML = '';
+
+  if(participants.length === 0) {
+    if(tbody) tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--sakura-soft)">No champions recorded yet. Complete a quiz session to claim your rank!</td></tr>';
+    return;
+  }
+
+  // Top 3 Podium
+  const top1 = participants[0];
+  const top2 = participants[1];
+  const top3 = participants[2];
+
+  function createPodiumCard(p, rankNum, rankClass) {
+    if(!p) return '';
+    const initial = (p.name || 'S')[0].toUpperCase();
+    const crowns = ['👑', '🥈', '🥉'];
+    return `
+      <div class="podium-slot ${rankClass}">
+        <div class="podium-crown">${crowns[rankNum - 1]}</div>
+        <div class="podium-avatar">${initial}</div>
+        <div class="podium-name">${p.name}</div>
+        <div class="podium-score">${p.totalMarks}/20 pts</div>
+        <div class="podium-block">#${rankNum}</div>
+      </div>
+    `;
+  }
+
+  let podiumHtml = '';
+  if(top2) podiumHtml += createPodiumCard(top2, 2, 'rank-2');
+  if(top1) podiumHtml += createPodiumCard(top1, 1, 'rank-1');
+  if(top3) podiumHtml += createPodiumCard(top3, 3, 'rank-3');
+  if(podiumWrap) podiumWrap.innerHTML = podiumHtml;
+
+  // Table rows
+  participants.forEach(p => {
+    const tr = document.createElement('tr');
+    let rankBadgeClass = '';
+    if(p.rank === 1) rankBadgeClass = 'rank-gold';
+    else if(p.rank === 2) rankBadgeClass = 'rank-silver';
+    else if(p.rank === 3) rankBadgeClass = 'rank-bronze';
+
+    tr.innerHTML = `
+      <td><span class="rank-badge ${rankBadgeClass}">#${p.rank}</span></td>
+      <td style="font-weight:700;color:#fff">${p.name}</td>
+      <td style="font-family:var(--font-serif);font-weight:800;color:var(--gold-bright)">${p.totalMarks}/20</td>
+      <td style="color:var(--sakura-soft)">${Math.round(p.completionTime || 0)}s</td>
+      <td style="color:var(--sakura-pink)">${p.category || 'General'}</td>
+      <td style="color:var(--sakura-soft);font-size:12px">${p.date || 'Today'}</td>
+    `;
+    if(tbody) tbody.appendChild(tr);
+  });
+}
+
+function exportCsv() {
+  const participants = getStoredLeaderboard();
+  participants.sort((a, b) => {
+    if(b.totalMarks !== a.totalMarks) return b.totalMarks - a.totalMarks;
+    return a.completionTime - b.completionTime;
+  });
+
+  let csv = "Rank,Scholar Name,Category,Total Marks,Completion Time (s),Date\n";
+  participants.forEach((p, idx) => {
+    csv += `${idx + 1},"${p.name}","${p.category || 'General'}",${p.totalMarks || 0},${Math.round(p.completionTime || 0)},"${p.date || 'Today'}"\n`;
+  });
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = `Sakura_Hall_of_Champions.csv`;
+  link.click();
+}
+
+/* Cherry Blossom Petals & Fireflies Canvas Animation */
+function initSakuraPetals() {
+  const canvas = document.getElementById('sakura-canvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let width = canvas.width = window.innerWidth;
+  let height = canvas.height = window.innerHeight;
+
+  window.addEventListener('resize', () => {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+  });
+
+  const PETAL_COUNT = 38;
+  const FIREFLY_COUNT = 24;
+  const petals = [];
+  const fireflies = [];
+
+  for(let i = 0; i < PETAL_COUNT; i++) {
+    petals.push({
+      x: Math.random() * width,
+      y: Math.random() * height - height,
+      size: Math.random() * 9 + 7,
+      speedY: Math.random() * 1.5 + 0.8,
+      speedX: Math.random() * 1.2 - 0.3,
+      angle: Math.random() * Math.PI * 2,
+      angularSpeed: Math.random() * 0.03 - 0.015,
+      tilt: Math.random() * Math.PI,
+      tiltSpeed: Math.random() * 0.05 + 0.02,
+      opacity: Math.random() * 0.45 + 0.4
+    });
+  }
+
+  for(let i = 0; i < FIREFLY_COUNT; i++) {
+    fireflies.push({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      radius: Math.random() * 2 + 1,
+      speedY: -(Math.random() * 0.6 + 0.2),
+      speedX: Math.random() * 0.8 - 0.4,
+      glow: Math.random() * Math.PI * 2,
+      glowSpeed: Math.random() * 0.04 + 0.02
+    });
+  }
+
+  function drawPetal(p) {
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(p.angle);
+    ctx.scale(1, Math.sin(p.tilt));
+
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.bezierCurveTo(p.size / 2, -p.size, p.size * 1.4, -p.size * 0.6, p.size * 0.8, p.size);
+    ctx.bezierCurveTo(p.size * 0.4, p.size * 0.6, -p.size * 0.4, p.size * 0.6, -p.size * 0.8, p.size);
+    ctx.bezierCurveTo(-p.size * 1.4, -p.size * 0.6, -p.size / 2, -p.size, 0, 0);
+
+    ctx.fillStyle = `rgba(255, 182, 193, ${p.opacity})`;
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawFirefly(f) {
+    ctx.save();
+    const alpha = (Math.sin(f.glow) + 1) / 2 * 0.7 + 0.2;
+    ctx.beginPath();
+    ctx.arc(f.x, f.y, f.radius, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255, 209, 102, ${alpha})`;
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = 'rgba(255, 183, 3, 0.8)';
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, width, height);
+
+    petals.forEach(p => {
+      p.y += p.speedY;
+      p.x += p.speedX + Math.sin(p.angle) * 0.5;
+      p.angle += p.angularSpeed;
+      p.tilt += p.tiltSpeed;
+
+      if(p.y > height + 20) {
+        p.y = -20;
+        p.x = Math.random() * width;
+      }
+      if(p.x > width + 20) p.x = -20;
+      else if(p.x < -20) p.x = width + 20;
+
+      drawPetal(p);
+    });
+
+    fireflies.forEach(f => {
+      f.y += f.speedY;
+      f.x += f.speedX;
+      f.glow += f.glowSpeed;
+
+      if(f.y < -10) {
+        f.y = height + 10;
+        f.x = Math.random() * width;
+      }
+      if(f.x < -10) f.x = width + 10;
+      else if(f.x > width + 10) f.x = -10;
+
+      drawFirefly(f);
+    });
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+}
+
+function triggerSakuraCelebration() {
+  const colors = ['#ff758f', '#ffb3c1', '#ffd166', '#ffffff', '#e63946', '#9d4edd'];
+  for(let i = 0; i < 70; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'cf-petal';
+      const size = Math.random() * 12 + 8;
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      el.style.cssText = `
+        left: ${Math.random() * 100}vw;
+        top: -20px;
+        width: ${size}px;
+        height: ${size * 1.3}px;
+        background: ${color};
+        border-radius: ${Math.random() > 0.5 ? '50% 0 50% 0' : '50%'};
+        box-shadow: 0 0 10px ${color}88;
+        animation-duration: ${Math.random() * 2.5 + 2}s;
+      `;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 4500);
+    }, i * 35);
+  }
+}
+
+/* Keyboard Navigation (A, B, C, D, 1, 2, 3, 4, Enter) */
+document.addEventListener('keydown', (e) => {
+  const quizScreen = document.getElementById('screen-quiz');
+  if(!quizScreen || !quizScreen.classList.contains('active')) return;
+
+  const key = e.key.toUpperCase();
+  const map = { 'A': 0, 'B': 1, 'C': 2, 'D': 3, '1': 0, '2': 1, '3': 2, '4': 3 };
+  if(map[key] !== undefined) {
+    selectOption(STATE.currentQIndex, map[key]);
+  } else if(e.key === 'ArrowRight' || e.key === 'Enter') {
+    navNextQ();
+  } else if(e.key === 'ArrowLeft') {
+    navPrevQ();
+  }
+});
+
+/* Initialize on DOM Ready */
+window.addEventListener('DOMContentLoaded', () => {
+  initSakuraPetals();
+  renderCategoryGrid();
+
+  const nameInput = document.getElementById('input-player-name');
+  if(nameInput) {
+    nameInput.addEventListener('keypress', (e) => {
+      if(e.key === 'Enter') {
+        goToCategories();
+      }
+    });
+  }
+});
+</script>
+</body>
+</html>
